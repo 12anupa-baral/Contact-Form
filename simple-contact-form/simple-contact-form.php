@@ -68,7 +68,6 @@ class SimpleContactForm {
 public function load_shortcode()
     {?>
     <div class="simple-contact-form">
-    <!-- <h1>Application Form</h1> -->
     
   
 <form id="Admission-Form">
