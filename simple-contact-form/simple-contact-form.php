@@ -125,7 +125,7 @@ public function load_shortcode()
 
                        $.ajax({
                         method: 'POST',
-                        url: '<?php echo get_rest_url(null ,'simple-contact-form/send-email');?>',
+                        url: '<?php echo get_rest_url(null ,'simple-contact-form/v1/send-email');?>',
                         headers: {'X-WP-Nonce': nonce},
                         data: form
                        })
@@ -148,7 +148,29 @@ public function load_shortcode()
    
 
     public function handle_contact_form($data){
-       echo "this is working";
+       $headers = $data->get_headers();
+       $params = $data->get_params();
+       $nonce = $headers['X_WP_nonce'][0];
+
+       if(!wp_verify_nonce($nonce, 'wp_rest'))
+       {
+        return new WP_REST_Response('Message not sent',422);
+
+       }
+
+       $post_id = wp_insert_post( 
+     [
+    'post_type' => 'simple_contact_form',
+    'post_title'=> 'contact enquiry',
+    'post_status' => 'publish'
+     ]
+
+       );  
+       
+       if($post_id)
+       {
+        return new WP_REST_Response('Thank you for your information',200);
+       }
     }
     
 }
